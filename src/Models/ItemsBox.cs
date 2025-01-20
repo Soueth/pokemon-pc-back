@@ -1,0 +1,12 @@
+using System;
+
+namespace PokemonPc.Models;
+
+public class ItemsBox : BaseModel
+{
+    public ICollection<Items> Item { get; set; } = null!;
+
+    public ICollection<Trainers> Trainer { get; set; } = null!;
+
+    public int Amount { get; set; }
+}

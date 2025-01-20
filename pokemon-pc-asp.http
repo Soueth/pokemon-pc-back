@@ -1,0 +1,6 @@
+@pokemon_pc_asp_HostAddress = http://localhost:5148
+
+GET {{pokemon_pc_asp_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

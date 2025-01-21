@@ -1,6 +1,7 @@
 using PokemonPc.Infra;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
+using PokemonPc.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,21 +11,29 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Database MongoDB Configuration
-builder.Services.Configure<MongoDbSettings>(
-    builder.Configuration.GetSection("MongoDb"));
+builder.Services.ConfigureMongoDB(builder.Configuration);
 
-builder.Services.AddSingleton<IMongoClient>(serviceProvider =>
-{
-    var settings = serviceProvider.GetRequiredService<IOptions<MongoDbSettings>>().Value;
-    return new MongoClient(settings.ConnectionString);
-});
+// builder.Services.Configure<MongoDbSettings>(
+//     builder.Configuration.GetSection("MongoDb"));
 
-builder.Services.AddScoped(serviceProvider =>
-{
-    var settings = serviceProvider.GetRequiredService<IOptions<MongoDbSettings>>().Value;
-    var client = serviceProvider.GetRequiredService<IMongoClient>();
-    return client.GetDatabase(settings.DatabaseName);
-});
+// builder.Services.AddSingleton<IMongoClient>(serviceProvider =>
+// {
+//     var settings = serviceProvider.GetRequiredService<IOptions<MongoDbSettings>>().Value;
+//     return new MongoClient(settings.ConnectionString);
+// });
+
+// builder.Services.AddScoped(serviceProvider =>
+// {
+//     var settings = serviceProvider.GetRequiredService<IOptions<MongoDbSettings>>().Value;
+//     var client = serviceProvider.GetRequiredService<IMongoClient>();
+//     return client.GetDatabase(settings.DatabaseName);
+// });
+
+// Configurar os Services
+builder.Services.AddAplicationServices();
+
+// Configurar os Controllers
+builder.Services.AddControllers();
 
 var app = builder.Build();
 
@@ -36,6 +45,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// Configurar as rotas e os controllers
+app.UseRouting();
+app.MapControllers();
 
 // record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
 // {

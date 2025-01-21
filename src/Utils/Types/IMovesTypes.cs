@@ -1,6 +1,6 @@
 using System;
 
-namespace PokemonPc.Interfaces;
+namespace PokemonPc.Utils.Types;
 
 public enum LearningType
 {

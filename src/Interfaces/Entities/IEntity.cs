@@ -1,6 +1,6 @@
 using PokemonPc.Utils.Types;
 
-public interface ICommonEntity
+public interface IEntity
 {
     public MongoId Id { get; set; }
     public DateTime? createdAt { get; set; }

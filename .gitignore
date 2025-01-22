@@ -20,6 +20,8 @@ node_modules/
 # Ignore log files
 *.log
 
+.prettierrc
+
 # Ignore ASP.NET configuration files
 # appsettings.Development.json
 # appsettings.Local.json

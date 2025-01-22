@@ -1,6 +1,3 @@
-using PokemonPc.Infra;
-using Microsoft.Extensions.Options;
-using MongoDB.Driver;
 using PokemonPc.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,23 +10,6 @@ builder.Services.AddSwaggerGen();
 // Database MongoDB Configuration
 builder.Services.ConfigureMongoDB(builder.Configuration);
 
-// builder.Services.Configure<MongoDbSettings>(
-//     builder.Configuration.GetSection("MongoDb"));
-
-// builder.Services.AddSingleton<IMongoClient>(serviceProvider =>
-// {
-//     var settings = serviceProvider.GetRequiredService<IOptions<MongoDbSettings>>().Value;
-//     return new MongoClient(settings.ConnectionString);
-// });
-
-// builder.Services.AddScoped(serviceProvider =>
-// {
-//     var settings = serviceProvider.GetRequiredService<IOptions<MongoDbSettings>>().Value;
-//     var client = serviceProvider.GetRequiredService<IMongoClient>();
-//     return client.GetDatabase(settings.DatabaseName);
-// });
-
-// Configurar os Services
 builder.Services.AddAplicationServices();
 
 // Configurar os Controllers
@@ -44,35 +24,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+// Usa HTTPS
+// app.UseHttpsRedirection();
 
 // Configurar as rotas e os controllers
 app.UseRouting();
 app.MapControllers();
-
-// record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-// {
-//     public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-// }
-
-// var summaries = new[]
-// {
-//     "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-// };
-
-// app.MapGet("/weatherforecast", () =>
-// {
-//     var forecast =  Enumerable.Range(1, 5).Select(index =>
-//         new WeatherForecast
-//         (
-//             DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-//             Random.Shared.Next(-20, 55),
-//             summaries[Random.Shared.Next(summaries.Length)]
-//         ))
-//         .ToArray();
-//     return forecast;
-// })
-// .WithName("GetWeatherForecast")
-// .WithOpenApi();
 
 app.Run();

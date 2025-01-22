@@ -8,5 +8,5 @@ namespace PokemonPc.Interfaces.Services;
 public interface IUserService
 {
     User GetById(MongoId _id);
-    void CreateUser(CreateUserDto user);
+    Task<User> CreateUser(CreateUserDto user);
 }

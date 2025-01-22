@@ -1,4 +1,4 @@
-using PokemonPc.Interfaces.Types;
+using PokemonPc.Utils.Types;
 
 namespace PokemonPc.Models;
 

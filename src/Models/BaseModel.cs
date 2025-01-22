@@ -3,7 +3,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace PokemonPc.Models;
 
-public class BaseModel
+public abstract class BaseModel
 {
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]
@@ -11,11 +11,10 @@ public class BaseModel
     public ObjectId? Id { get; set; }
 
     [BsonDateTimeOptions(Kind = DateTimeKind.Local)]
-    [BsonDefaultValue("new Date()")]
     [BsonElement("createdAt")]
-    public DateTime CreatedAt { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     [BsonDateTimeOptions(Kind = DateTimeKind.Local)]
     [BsonElement("updatedAt")]
-    public DateTime UpdatedAt { get; set; }
+    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 }

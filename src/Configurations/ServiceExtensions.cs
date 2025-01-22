@@ -4,6 +4,8 @@ using MongoDB.Driver;
 using PokemonPc.Infra;
 using PokemonPc.Interfaces.Repositories;
 using PokemonPc.Interfaces.Services;
+using PokemonPc.Repositories;
+using PokemonPc.Services;
 
 namespace PokemonPc.Configurations
 {
@@ -11,7 +13,7 @@ namespace PokemonPc.Configurations
     {
         public static void ConfigureMongoDB(this IServiceCollection services, IConfiguration configuration)
         {
-            services.Configure<MongoDbSettings>(configuration.GetSection("MongoDb"));
+            services.Configure<MongoDbSettings>(configuration.GetSection("MongoDbSettings"));
 
             services.AddSingleton<IMongoClient>(serviceProvider =>
             {
@@ -31,6 +33,8 @@ namespace PokemonPc.Configurations
             // services.AddScoped<IService/IRepository, Service/Repository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ITrainerRepository, TrainerRepository>();
+            services.AddScoped<ITrainerService, TrainerService>();
         }
     }
 }

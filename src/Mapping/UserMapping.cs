@@ -1,12 +1,12 @@
-using MongoDB.Bson;
 using PokemonPc.DTOs;
 using PokemonPc.Models;
+using PokemonPc.src.DTOs;
 
 namespace PokemonPc.Mapping;
 
 public static class UserMapping
 {
-    public static User ToEntity(this CreateUserDto user)
+    public static User ToEntity(this CreateUserDto user, Trainer trainer)
     {
         // ObjectId trainerId;
 
@@ -18,7 +18,25 @@ public static class UserMapping
         return new()
         {
             Email = user.Email,
-            // Trainer = new Trainer() { Id = trainerId },
+            TrainerId = trainer.Id,
+            Trainer = trainer,
         };
+    }
+
+    public static UserDto ToDto(this User user, string name)
+    {
+        if (!user.Id.HasValue)
+        {
+            throw new ArgumentException($"Id da entidade {nameof(user)} não foi preenchido");
+        }
+
+        return new(
+            user.Id.ToString()!,
+            name,
+            user.Email,
+            user.TrainerId.ToString()!,
+            user.CreatedAt,
+            user.UpdatedAt
+        );
     }
 }

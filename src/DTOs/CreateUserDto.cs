@@ -1,10 +1,12 @@
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.InteropServices;
+using PokemonPc.Constants;
+using PokemonPc.Utils.Validators;
 
 namespace PokemonPc.DTOs;
 
 public record class CreateUserDto(
     [Required][StringLength(maximumLength: 50, MinimumLength = 5)] string Email,
-    // [Required][ObjectIdValidator] string Trainer,
-    [Required][StringLength(maximumLength: 100, MinimumLength = 3)] string Name
+    [Required][StringLength(maximumLength: 100, MinimumLength = 3)] string Name,
+    [Required][PasswordValidation] string Password
 );

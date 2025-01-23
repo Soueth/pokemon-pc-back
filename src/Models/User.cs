@@ -14,5 +14,11 @@ public class User : BaseModel
 
     [BsonIgnore]
     public Trainer? Trainer { get; set; }
-    // TODO: o atributo 'password' e a lógica de autentificação
+
+    [BsonId]
+    [BsonRepresentation(BsonType.String)]
+    public Guid? ConnectionString { get; set; }
+    
+    [BsonElement("password")]
+    public string Password { get; set; } = null!;
 }

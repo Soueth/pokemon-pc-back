@@ -10,6 +10,9 @@ builder.Services.AddSwaggerGen();
 // Database MongoDB Configuration
 builder.Services.ConfigureMongoDB(builder.Configuration);
 
+// Configura ASP.NET Core Identity
+// builder.Services.ConfigureIdentity();
+
 builder.Services.AddAplicationServices();
 
 // Configurar os Controllers

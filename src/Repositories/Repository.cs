@@ -10,8 +10,7 @@ namespace PokemonPc.Repositories;
 public class Repository<T> : IRepository<T> where T : BaseModel
 {
     protected readonly IMongoCollection<T> _collection;
-    private FilterDefinitionBuilder<T> Filter { get; }
-
+    protected FilterDefinitionBuilder<T> Filter { get; }
 
     public Repository(IMongoDatabase db, string collectionName)
     {

@@ -13,7 +13,20 @@ public readonly struct PROVIDERS
         TRAINER = "trainers";
     }
 }
+
+public readonly struct ERROR_MESSAGES
+{
+    public string MUST_BE_STRING { get; }
+
+    public ERROR_MESSAGES()
+    {
+        MUST_BE_STRING = "Value must be a string";
+    }
+}
+
 public static class AppConstants
 {
     public static readonly PROVIDERS PROVIDERS = new PROVIDERS();
+    public static readonly Guid USERS_GUID = Guid.NewGuid();
+    public static readonly ERROR_MESSAGES ERROR_MESSAGES = new ERROR_MESSAGES();
 }

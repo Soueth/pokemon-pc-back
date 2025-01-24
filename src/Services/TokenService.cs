@@ -12,7 +12,7 @@ public class TokenService : ITokenService
     private readonly string _secretKey;
     private readonly string _issuer;
     private readonly string _audience;
-    private TokenService(IConfiguration configuration)
+    public TokenService(IConfiguration configuration)
     {
         _secretKey = configuration["Jwt:Key"]!;
         _issuer = configuration["Jwt:Issuer"]!;

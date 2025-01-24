@@ -11,6 +11,11 @@ public class UserRepository : Repository<User>, IUserRepository
     public UserRepository(IMongoDatabase db) 
         : base(db, AppConstants.PROVIDERS.USER) { }
 
+    public async Task<User?> getByEmail(string email)
+    {
+        return await _collection.Find(Filter.Eq("email", email)).FirstOrDefaultAsync();
+    }
+
     public async Task<bool> verifyEmail(string email)
     {
         return await _collection.Find(Filter.Eq("email", email)).AnyAsync();

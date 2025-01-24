@@ -15,9 +15,9 @@ public class User : BaseModel
     [BsonIgnore]
     public Trainer? Trainer { get; set; }
 
-    [BsonId]
     [BsonRepresentation(BsonType.String)]
-    public Guid? ConnectionString { get; set; }
+    [BsonElement("personalToken")]
+    public Guid? PersonalToken { get; set; }
     
     [BsonElement("password")]
     public string Password { get; set; } = null!;

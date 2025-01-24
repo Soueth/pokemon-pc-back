@@ -21,7 +21,7 @@ public class PasswordValidation : ValidationAttribute
             !stringValue.Any(char.IsUpper) || 
             !stringValue.Any(char.IsDigit) ||
             !stringValue.Any(char.IsLower) ||
-            !stringValue.Any(char.IsSymbol)
+            !stringValue.Any(c => !char.IsLetterOrDigit(c))
         ) {
             return new ValidationResult
             (

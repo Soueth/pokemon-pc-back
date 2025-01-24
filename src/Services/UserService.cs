@@ -4,6 +4,7 @@ using PokemonPc.Constants;
 using PokemonPc.DTOs;
 using PokemonPc.Interfaces.Repositories;
 using PokemonPc.Interfaces.Services;
+using PokemonPc.Interfaces.Utils;
 using PokemonPc.Mapping;
 using PokemonPc.Models;
 using PokemonPc.Utils.Functions;
@@ -15,14 +16,17 @@ public class UserService : IUserService
 {
     private readonly IUserRepository _userRepository;
     private readonly ITrainerService _trainerService;
+    private readonly ITokenService _tokenService;
 
-    public UserService(IUserRepository userRepository, ITrainerService trainerService)
+
+    public UserService(IUserRepository userRepository, ITrainerService trainerService, ITokenService tokenService)
     {
         _userRepository = userRepository;
         _trainerService = trainerService;
+        _tokenService = tokenService;
     }
 
-    public async Task<User> CreateUser(CreateUserDto user)
+    public async Task<UserTokenDto> CreateUser(CreateUserDto user)
     {
         if (await _userRepository.verifyEmail(user.Email))
         {
@@ -38,17 +42,31 @@ public class UserService : IUserService
         ObjectId _id = ObjectId.GenerateNewId();
         userEntity.Id = _id;
 
-        userEntity.ConnectionString = UuidGenerator.GenerateUuid(AppConstants.USERS_GUID, _id.ToString());
+        userEntity.PersonalToken = UuidGenerator.GenerateUuid(AppConstants.USERS_GUID, _id.ToString());
 
         Task<User> promise = _userRepository.CreateAsync(userEntity);
 
-        // TODO: implementar lógica para criação do token.
+        string token = _tokenService.GenerateToken(userEntity.PersonalToken.ToString()!);
 
-        return await promise;
+        User _user = await promise;
+
+        return _user.ToTokenDto(token);
     }
 
     public User GetById(MongoId _id)
     {
         throw new NotImplementedException();
+    }
+
+    public async Task<string> Login(LoginDto loginDto)
+    {
+        User? user = await _userRepository.getByEmail(loginDto.Email);
+
+        if (user == null || !Encrypter.VerifyPassword(loginDto.Password, user.Password))
+        {
+            throw new ArgumentException("Usuário e/ou senha inválido(s)");
+        }
+
+        return _tokenService.GenerateToken(user.CreatedAt.ToString()!);
     }
 }

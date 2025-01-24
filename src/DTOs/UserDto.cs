@@ -1,6 +1,6 @@
 using System;
 
-namespace PokemonPc.src.DTOs;
+namespace PokemonPc.DTOs;
 
 public record class UserDto(
     string Id,

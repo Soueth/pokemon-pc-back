@@ -1,6 +1,5 @@
 using PokemonPc.DTOs;
 using PokemonPc.Models;
-using PokemonPc.src.DTOs;
 
 namespace PokemonPc.Mapping;
 
@@ -37,6 +36,19 @@ public static class UserMapping
             user.TrainerId.ToString()!,
             user.CreatedAt,
             user.UpdatedAt
+        );
+    }
+
+    public static UserTokenDto ToTokenDto(this User user, string token)
+    {
+        if (!user.Id.HasValue)
+        {
+            throw new ArgumentException($"Id da entidade {nameof(user)} não foi preenchido");
+        }
+
+        return new(
+            user.Id.ToString()!,
+            token
         );
     }
 }

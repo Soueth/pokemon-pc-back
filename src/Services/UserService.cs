@@ -7,6 +7,7 @@ using PokemonPc.Interfaces.Services;
 using PokemonPc.Interfaces.Utils;
 using PokemonPc.Mapping;
 using PokemonPc.Models;
+using PokemonPc.Utils.Exceptions;
 using PokemonPc.Utils.Functions;
 using PokemonPc.Utils.Types;
 
@@ -30,7 +31,7 @@ public class UserService : IUserService
     {
         if (await _userRepository.verifyEmail(user.Email))
         {
-            throw new ArgumentException($"Email {user.Email} já cadastrado");
+            throw new EmailJaCadastradoException(user.Email);
         }
 
         Trainer trainer = await _trainerService.CreateTrainer(
@@ -64,7 +65,7 @@ public class UserService : IUserService
 
         if (user == null || !Encrypter.VerifyPassword(loginDto.Password, user.Password))
         {
-            throw new ArgumentException("Usuário e/ou senha inválido(s)");
+            throw new EmailSenhaIncorretosException();
         }
 
         return _tokenService.GenerateToken(user.CreatedAt.ToString()!);

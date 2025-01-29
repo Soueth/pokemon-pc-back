@@ -36,4 +36,5 @@ A autenticação é feita utilizando JWT. As configurações de JWT estão local
 Para executar o projeto, utilize os seguintes comandos:
 
 ```sh
+dotnet restore // Para instalar dependências
 dotnet run

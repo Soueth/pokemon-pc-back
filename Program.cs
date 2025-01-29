@@ -30,6 +30,8 @@ if (app.Environment.IsDevelopment())
 // Usa HTTPS
 // app.UseHttpsRedirection();
 
+app.UseCustomExceptionHandler();
+
 // Configurar as rotas e os controllers
 app.UseRouting();
 app.MapControllers();

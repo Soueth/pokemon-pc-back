@@ -1,5 +1,6 @@
 using PokemonPc.DTOs;
 using PokemonPc.Models;
+using PokemonPc.Utils.Exceptions;
 
 namespace PokemonPc.Mapping;
 
@@ -26,7 +27,7 @@ public static class UserMapping
     {
         if (!user.Id.HasValue)
         {
-            throw new ArgumentException($"Id da entidade {nameof(user)} não foi preenchido");
+            throw new EmptyIdException(nameof(user));
         }
 
         return new(
@@ -43,7 +44,7 @@ public static class UserMapping
     {
         if (!user.Id.HasValue)
         {
-            throw new ArgumentException($"Id da entidade {nameof(user)} não foi preenchido");
+            throw new EmptyIdException(nameof(user));
         }
 
         return new(

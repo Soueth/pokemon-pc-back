@@ -4,8 +4,6 @@ VisualStudioVersion = 17.5.2.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pokemon-pc-asp", "pokemon-pc-asp.csproj", "{A0B0BF4B-86DA-82E2-5FAA-685FB13E1419}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pokemon-Pc.Tests", "..\pokemon-pc.Tests\Pokemon-Pc.Tests.csproj", "{60723B63-F44E-4755-B677-0C6C7131BC75}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

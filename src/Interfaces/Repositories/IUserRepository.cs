@@ -7,5 +7,5 @@ public interface IUserRepository : IRepository<User>
 {
     // User create(CreateUserDto user);
     Task<bool> verifyEmail(string email);
-    Task<User?> getByEmail(string email);
+    Task<User?> getWithPassword(string email);
 }

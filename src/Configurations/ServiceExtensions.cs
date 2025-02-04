@@ -10,6 +10,7 @@ using PokemonPc.Infra;
 using PokemonPc.Interfaces.Repositories;
 using PokemonPc.Interfaces.Services;
 using PokemonPc.Interfaces.Utils;
+using PokemonPc.Models;
 using PokemonPc.Repositories;
 using PokemonPc.Services;
 
@@ -80,7 +81,7 @@ namespace PokemonPc.Configurations
         public static void AddAplicationServices(this IServiceCollection services)
         {
             // Injeções Singleton
-            services.AddSingleton<ITokenService, TokenService>();
+            services.AddSingleton<IAuthService, AuthService>();
 
             // Injeções Scopeds
             services.AddScoped<IUserRepository, UserRepository>();

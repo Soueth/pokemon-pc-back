@@ -11,11 +11,13 @@ public class Repository<T> : IRepository<T> where T : BaseModel
 {
     protected readonly IMongoCollection<T> _collection;
     protected FilterDefinitionBuilder<T> Filter { get; }
+    protected ProjectionDefinitionBuilder<T> Projection { get; }
 
     public Repository(IMongoDatabase db, string collectionName)
     {
         _collection = db.GetCollection<T>(collectionName);
         Filter = Builders<T>.Filter;
+        Projection = Builders<T>.Projection;
     }
 
     public async Task<T> GetByIdAsync(MongoId id)

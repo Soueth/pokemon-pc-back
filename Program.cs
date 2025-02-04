@@ -1,4 +1,5 @@
 using PokemonPc.Configurations;
+using Testes;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,7 +31,7 @@ if (app.Environment.IsDevelopment())
 // Usa HTTPS
 // app.UseHttpsRedirection();
 
-app.UseCustomExceptionHandler();
+app.UseCustomExceptionHandler(app.Environment);
 
 // Configurar as rotas e os controllers
 app.UseRouting();

@@ -1,5 +1,3 @@
-using System.Security.Cryptography;
-
 namespace PokemonPc.Utils.Functions;
 
 public static class Encrypter
@@ -9,4 +7,15 @@ public static class Encrypter
 
     public static bool VerifyPassword(string password, string hash) =>
         BCrypt.Net.BCrypt.Verify(password, hash);
+
+    public static CookieOptions GenerateCookie(bool httpsOnly, int lifetime)
+    {
+        return new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = httpsOnly,
+            SameSite = SameSiteMode.Strict,
+            Expires = DateTime.UtcNow.AddDays(lifetime)
+        };
+    }
 }

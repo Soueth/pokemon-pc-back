@@ -1,9 +1,12 @@
-using System;
+using Microsoft.EntityFrameworkCore;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Driver;
+using MongoDB.Entities;
 
 namespace PokemonPc.Models;
 
+[Collection("users")]
 public class User : BaseModel
 {
     [BsonElement("email")]
@@ -15,7 +18,7 @@ public class User : BaseModel
     [BsonIgnore]
     public Trainer? Trainer { get; set; }
 
-    [BsonRepresentation(BsonType.String)]
+    // [BsonRepresentation(BsonType.String)]
     [BsonElement("personalToken")]
     public Guid? PersonalToken { get; set; }
     

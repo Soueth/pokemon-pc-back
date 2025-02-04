@@ -17,14 +17,22 @@ public class UserService : IUserService
 {
     private readonly IUserRepository _userRepository;
     private readonly ITrainerService _trainerService;
-    private readonly ITokenService _tokenService;
+    private readonly IAuthService _authService;
+
+    private readonly IWebHostEnvironment _env;
 
 
-    public UserService(IUserRepository userRepository, ITrainerService trainerService, ITokenService tokenService)
-    {
+    public UserService
+    (
+        IUserRepository userRepository, 
+        ITrainerService trainerService, 
+        IAuthService authService, 
+        IWebHostEnvironment env
+    ) {
         _userRepository = userRepository;
         _trainerService = trainerService;
-        _tokenService = tokenService;
+        _authService = authService;
+        _env = env;
     }
 
     public async Task<UserTokenDto> CreateUser(CreateUserDto user)
@@ -39,18 +47,17 @@ public class UserService : IUserService
         );
 
         User userEntity = user.ToEntity(trainer);
-        
         ObjectId _id = ObjectId.GenerateNewId();
-        userEntity.Id = _id;
 
+        userEntity.Id = _id;
         userEntity.PersonalToken = UuidGenerator.GenerateUuid(AppConstants.USERS_GUID, _id.ToString());
+        userEntity.Password = Encrypter.HashPassword(user.Password);
 
         Task<User> promise = _userRepository.CreateAsync(userEntity);
 
-        string token = _tokenService.GenerateToken(userEntity.PersonalToken.ToString()!);
+        string token = _authService.GenerateToken(userEntity.PersonalToken.ToString()!);
 
         User _user = await promise;
-
         return _user.ToTokenDto(token);
     }
 
@@ -61,13 +68,13 @@ public class UserService : IUserService
 
     public async Task<string> Login(LoginDto loginDto)
     {
-        User? user = await _userRepository.getByEmail(loginDto.Email);
+        User? user = await _userRepository.getWithPassword(loginDto.Email);
 
         if (user == null || !Encrypter.VerifyPassword(loginDto.Password, user.Password))
         {
             throw new EmailSenhaIncorretosException();
         }
 
-        return _tokenService.GenerateToken(user.CreatedAt.ToString()!);
+        return _authService.GenerateToken(user.PersonalToken.ToString()!);
     }
 }

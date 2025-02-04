@@ -17,10 +17,12 @@ public readonly struct PROVIDERS
 public readonly struct ERROR_MESSAGES
 {
     public string MUST_BE_STRING { get; }
+    public string UNEXPECTED_ERROR { get; }
 
     public ERROR_MESSAGES()
     {
         MUST_BE_STRING = "Value must be a string";
+        UNEXPECTED_ERROR = "Ocorreu um erro inesperado";
     }
 }
 

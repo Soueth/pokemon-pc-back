@@ -45,7 +45,7 @@ public class ExceptionMiddleware
 
         if (isDefault)
         {
-            error = AppConstants.ERROR_MESSAGES.UNEXPECTED_ERROR;
+            error = APP_CONSTANTS.ERROR_MESSAGES.UNEXPECTED_ERROR;
 
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine($"Erro inesperado: \n {exception}");

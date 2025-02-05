@@ -50,7 +50,7 @@ public class UserService : IUserService
         ObjectId _id = ObjectId.GenerateNewId();
 
         userEntity.Id = _id;
-        userEntity.PersonalToken = UuidGenerator.GenerateUuid(AppConstants.USERS_GUID, _id.ToString());
+        userEntity.PersonalToken = UuidGenerator.GenerateUuid(APP_CONSTANTS.USERS_GUID, _id.ToString());
         userEntity.Password = Encrypter.HashPassword(user.Password);
 
         Task<User> promise = _userRepository.CreateAsync(userEntity);

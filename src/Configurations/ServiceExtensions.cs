@@ -36,26 +36,6 @@ namespace PokemonPc.Configurations
             });
         }
 
-        // public static void ConfigureIndentityCore(this IServiceCollection services, string mongoConnectionString, string databaseName)
-        // {
-        //     services.AddIdentity<MongoIdentityUser, MongoIdentityRole>(options =>
-        //     {
-        //         options.SignIn.RequireConfirmedAccount = true;
-
-        //         // Configurações de senha
-        //         options.Password.RequireDigit = true;
-        //         options.Password.RequireLowercase = true;
-        //         options.Password.RequireUppercase = true;
-        //         options.Password.RequireNonAlphanumeric = true;
-        //         options.Password.RequiredLength = 8;
-        //     })
-        //     .AddMongoDbStores<MongoIdentityUser, MongoIdentityRole, Guid>(
-        //         mongoConnectionString,
-        //         databaseName
-        //     )
-        //     .AddDefaultTokenProviders();
-        // }
-
         public static void ConfigureAuthenthication(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddAuthentication(options =>
@@ -81,6 +61,8 @@ namespace PokemonPc.Configurations
         public static void AddAplicationServices(this IServiceCollection services)
         {
             // Injeções Singleton
+            services.AddSingleton<IPokedexRepository, PokedexRepository>();
+            services.AddSingleton<IPokedexService, PokedexService>();
             services.AddSingleton<IAuthService, AuthService>();
 
             // Injeções Scopeds

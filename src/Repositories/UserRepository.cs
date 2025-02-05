@@ -10,7 +10,7 @@ namespace PokemonPc.Repositories;
 public class UserRepository : Repository<User>, IUserRepository
 {
     public UserRepository(IMongoDatabase db) 
-        : base(db, AppConstants.PROVIDERS.USER) 
+        : base(db, APP_CONSTANTS.PROVIDERS.USER) 
     { 
         var indexModel = new CreateIndexModel<User>(
             Builders<User>.IndexKeys.Ascending(doc => doc.PersonalToken)

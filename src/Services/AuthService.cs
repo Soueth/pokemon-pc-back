@@ -45,7 +45,7 @@ public class AuthService : IAuthService
     {
         return Encrypter.GenerateCookie
         (
-            !_env.IsDevelopment(), int.Parse(_configuration["Cookies:AuthLifetime"] ?? "0")
+            !_env.IsDevelopment(), int.Parse(_configuration["Jwt:AuthLifetime"] ?? "0")
         );
     }
 }

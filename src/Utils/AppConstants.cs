@@ -6,11 +6,13 @@ public readonly struct PROVIDERS
 {
     public string USER { get; }
     public string TRAINER { get; }
+    public string POKEDEX { get; }
 
     public PROVIDERS()
     {
         USER = "users";
         TRAINER = "trainers";
+        POKEDEX = "pokedex";
     }
 }
 
@@ -26,7 +28,7 @@ public readonly struct ERROR_MESSAGES
     }
 }
 
-public static class AppConstants
+public static class APP_CONSTANTS
 {
     public static readonly PROVIDERS PROVIDERS = new PROVIDERS();
     public static readonly Guid USERS_GUID = Guid.NewGuid();

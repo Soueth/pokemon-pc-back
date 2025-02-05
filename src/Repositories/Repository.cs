@@ -7,13 +7,13 @@ using PokemonPc.Utils.Types;
 
 namespace PokemonPc.Repositories;
 
-public class Repository<T> : IRepository<T> where T : BaseModel
+public abstract class Repository<T> : IRepository<T> where T : BaseModel
 {
     protected readonly IMongoCollection<T> _collection;
     protected FilterDefinitionBuilder<T> Filter { get; }
     protected ProjectionDefinitionBuilder<T> Projection { get; }
 
-    public Repository(IMongoDatabase db, string collectionName)
+    protected Repository(IMongoDatabase db, string collectionName)
     {
         _collection = db.GetCollection<T>(collectionName);
         Filter = Builders<T>.Filter;

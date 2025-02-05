@@ -8,5 +8,5 @@ namespace PokemonPc.Repositories;
 public class TrainerRepository : Repository<Trainer>, ITrainerRepository
 {
     public TrainerRepository(IMongoDatabase db)
-        : base(db, AppConstants.PROVIDERS.TRAINER) { }
+        : base(db, APP_CONSTANTS.PROVIDERS.TRAINER) { }
 }

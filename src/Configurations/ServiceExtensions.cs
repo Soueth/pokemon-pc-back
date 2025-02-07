@@ -1,8 +1,6 @@
 using System;
 using System.Text;
-using AspNetCore.Identity.MongoDbCore.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
@@ -10,7 +8,6 @@ using PokemonPc.Infra;
 using PokemonPc.Interfaces.Repositories;
 using PokemonPc.Interfaces.Services;
 using PokemonPc.Interfaces.Utils;
-using PokemonPc.Models;
 using PokemonPc.Repositories;
 using PokemonPc.Services;
 
@@ -51,8 +48,8 @@ namespace PokemonPc.Configurations
                     ValidateAudience = true,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    ValidIssuer = configuration["Jwr:Issuer"],
-                    ValidAudience = configuration["Jwr:Audience"],
+                    ValidIssuer = configuration["Jwt:Issuer"],
+                    ValidAudience = configuration["Jwt:Audience"],
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:key"]!))
                 };
             });
@@ -64,6 +61,7 @@ namespace PokemonPc.Configurations
             services.AddSingleton<IPokedexRepository, PokedexRepository>();
             services.AddSingleton<IPokedexService, PokedexService>();
             services.AddSingleton<IAuthService, AuthService>();
+            services.AddSingleton<IApiService, ApiService>();
 
             // Injeções Scopeds
             services.AddScoped<IUserRepository, UserRepository>();

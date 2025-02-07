@@ -3,7 +3,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace PokemonPc.Models;
 
-public class Moves
+public class Move
 {
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]

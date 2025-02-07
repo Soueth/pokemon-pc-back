@@ -4,7 +4,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace PokemonPc.Models;
 
-public class Abilities
+public class Ability
 {
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]

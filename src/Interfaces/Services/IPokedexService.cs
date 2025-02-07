@@ -2,6 +2,6 @@ namespace PokemonPc.Interfaces.Services;
 
 public interface IPokedexService
 {
-    Task VerifyCollection();
+    void VerifyCollection();
     Task PopulatePokedex();
 }

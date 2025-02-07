@@ -4,7 +4,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace PokemonPc.Models;
 
-public class Items
+public class Item
 {
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]

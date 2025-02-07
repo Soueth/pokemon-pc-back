@@ -1,6 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using System.Runtime.InteropServices;
-using PokemonPc.Constants;
 using PokemonPc.Utils.Validators;
 
 namespace PokemonPc.DTOs;

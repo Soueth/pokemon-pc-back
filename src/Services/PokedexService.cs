@@ -1,4 +1,3 @@
-using System.Net.Http;
 using PokemonPc.Interfaces.Repositories;
 using PokemonPc.Interfaces.Services;
 

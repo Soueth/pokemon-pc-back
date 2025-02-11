@@ -60,14 +60,19 @@ namespace PokemonPc.Configurations
             // Injeções Singleton
             services.AddSingleton<IPokedexRepository, PokedexRepository>();
             services.AddSingleton<IPokedexService, PokedexService>();
+            
             services.AddSingleton<IAuthService, AuthService>();
             services.AddSingleton<IApiService, ApiService>();
 
             // Injeções Scopeds
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUserService, UserService>();
+
             services.AddScoped<ITrainerRepository, TrainerRepository>();
             services.AddScoped<ITrainerService, TrainerService>();
+
+            services.AddScoped<IPokemonRepository, PokemonRepository>();
+            services.AddScoped<IPokemonService, PokemonService>();
         }
     }
 }

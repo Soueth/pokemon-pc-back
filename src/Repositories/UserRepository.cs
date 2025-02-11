@@ -1,9 +1,7 @@
 using MongoDB.Driver;
 using PokemonPc.Constants;
-using PokemonPc.DTOs;
 using PokemonPc.Interfaces.Repositories;
 using PokemonPc.Models;
-using PokemonPc.Repositories;
 
 namespace PokemonPc.Repositories;
 

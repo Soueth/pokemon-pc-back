@@ -7,7 +7,7 @@ using PokemonPc.Utils.Types;
 
 namespace PokemonPc.Repositories;
 
-public abstract class Repository<T> : IRepository<T> where T : BaseModel
+public abstract class Repository<T> : IRepository<T> where T : Model
 {
     protected readonly IMongoCollection<T> _collection;
     protected FilterDefinitionBuilder<T> Filter { get; }

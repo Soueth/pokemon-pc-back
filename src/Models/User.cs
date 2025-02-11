@@ -1,13 +1,11 @@
-using Microsoft.EntityFrameworkCore;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
-using MongoDB.Driver;
 using MongoDB.Entities;
 
 namespace PokemonPc.Models;
 
 [Collection("users")]
-public class User : BaseModel
+public class User : Model
 {
     [BsonElement("email")]
     public string Email { get; set; } = null!;

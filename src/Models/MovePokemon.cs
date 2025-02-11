@@ -2,9 +2,9 @@ using PokemonPc.Utils.Types;
 
 namespace PokemonPc.Models;
 
-public class MovesPokemon : BaseModel
+public class MovesPokemon : Model
 {
-    public ICollection<Moves> Move { get; set; } = null!;
+    public ICollection<Move> Move { get; set; } = null!;
 
     public ICollection<Pokedex> Pokemon { get; set; } = null!;
 

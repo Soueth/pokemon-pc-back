@@ -2,7 +2,7 @@ using System;
 
 namespace PokemonPc.Models;
 
-public class ItemsBox : BaseModel
+public class ItemsBox : Model
 {
     public ICollection<Item> Item { get; set; } = null!;
 

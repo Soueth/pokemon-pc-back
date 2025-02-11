@@ -2,9 +2,9 @@ using System;
 
 namespace PokemonPc.Models;
 
-public class AbilityPokemon : BaseModel
+public class AbilityPokemon : Model
 {
-    public ICollection<Abilities> Ability { get; set; } = null!;
+    public ICollection<Ability> Ability { get; set; } = null!;
 
     public ICollection<Pokemon> Pokemon { get; set; } = null!;
 }

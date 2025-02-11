@@ -3,7 +3,7 @@ using PokemonPc.Utils.Types;
 
 namespace PokemonPc.Interfaces.Repositories;
 
-public interface IRepository<T> where T : BaseModel
+public interface IRepository<T> where T : Model
 {
     Task<T> GetByIdAsync(MongoId id);
     Task<T> CreateAsync(T entity);

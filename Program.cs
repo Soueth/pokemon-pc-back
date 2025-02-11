@@ -16,6 +16,8 @@ builder.Services.ConfigureMongoDB(builder.Configuration);
 
 builder.Services.AddAplicationServices();
 
+builder.Services.AddSignalR();
+
 // Configurar os Controllers
 builder.Services.AddControllers();
 
@@ -32,6 +34,7 @@ if (app.Environment.IsDevelopment())
 // app.UseHttpsRedirection();
 
 app.UseCustomExceptionHandler(app.Environment);
+
 
 // Configurar as rotas e os controllers
 app.UseRouting();

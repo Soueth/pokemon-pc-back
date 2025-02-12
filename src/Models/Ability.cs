@@ -10,6 +10,7 @@ public class Ability
     [BsonRepresentation(BsonType.ObjectId)]
     public string? Id { get; set; }
 
+    public int ExtenalId { get; set; }
     public string Name { get; set; } = null!;
 
     public string Description { get; set; } = null!;

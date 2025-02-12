@@ -1,5 +1,3 @@
-using System;
-
 namespace PokemonPc.Interfaces.Services;
 
 public interface IApiService

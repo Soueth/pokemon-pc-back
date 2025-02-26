@@ -1,8 +1,12 @@
 using System.Text.Json;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using PokemonPc.Constants;
+using PokemonPc.Interfaces.External;
 using PokemonPc.Interfaces.Services;
+using PokemonPc.Mapping;
 using PokemonPc.Models;
+using PokemonPc.Utils.Exceptions;
 using PokemonPc.Utils.Functions;
 
 namespace PokemonPc.Services;
@@ -51,11 +55,30 @@ public class ApiService : IApiService
         // string abilitiesBody = await taskAbilities.Content.ReadAsStringAsync();
         // var abilities = JsonSerializer.Deserialize<ResponseCount>(abilitiesBody);
         
+        ResponseCount? abilities = null;
+        ResponseCount? moves = null;
+        ResponseCount? items = null;
+        ResponseCount? pokemon = null;
         // Organiza as respostas
-        ResponseCount? abilities = await JsonFunctions.ProcessResponse<ResponseCount>(taskAbilities);
-        ResponseCount? moves = await JsonFunctions.ProcessResponse<ResponseCount>(taskMoves);
-        ResponseCount? items = await JsonFunctions.ProcessResponse<ResponseCount>(taskItems);
-        ResponseCount? pokemon = await JsonFunctions.ProcessResponse<ResponseCount>(taskPokemon);
+        if (taskAbilities.IsSuccessStatusCode) 
+        {
+            abilities = await taskAbilities.Content.ReadFromJsonAsync<ResponseCount>();
+        }
+
+        if (taskMoves.IsSuccessStatusCode) 
+        {
+            moves = await taskMoves.Content.ReadFromJsonAsync<ResponseCount>();
+        }
+
+        if (taskItems.IsSuccessStatusCode) 
+        {
+            items = await taskItems.Content.ReadFromJsonAsync<ResponseCount>();
+        }
+
+        if (taskPokemon.IsSuccessStatusCode) 
+        {
+            pokemon = await taskPokemon.Content.ReadFromJsonAsync<ResponseCount>();
+        }
 
         // string movesBody = await taskMoves.Content.ReadAsStringAsync();
         // var moves = JsonSerializer.Deserialize<ResponseCount>(movesBody);
@@ -104,19 +127,15 @@ public class ApiService : IApiService
 
         if ((await hasItem) != null)
         {
-            tasks.Add(PopulateItems());
+            tasks.Add(PopulateItems(counts["items"]));
         }
         if ((await hasAbility) != null)
         {
-            tasks.Add(PopulateAbilities());
+            tasks.Add(PopulateAbilities(counts["abilities"]));
         }
         if ((await hasMove) != null)
         {
-            tasks.Add(PopulateMoves());
-        }
-        if ((await hasPokemon) != null)
-        {
-            tasks.Add(PopulatePokemons());
+            tasks.Add(PopulateMoves(counts["moves"]));
         }
 
         Console.ForegroundColor = ConsoleColor.Magenta;
@@ -124,26 +143,75 @@ public class ApiService : IApiService
         Console.ResetColor();
 
         await Task.WhenAll(tasks);
+
+        if ((await hasPokemon) != null)
+        {
+            await PopulatePokemons(counts["pokemon"]);
+        }
     }
 
-    public async Task PopulateAbilities(int id = 1)
+    public async Task PopulateAbilities(int qtd)
     {
-        await _httpClient.GetAsync($"{POKE_API}/abilities/{id}");
+        for (int i = 1; i < qtd; i++) {
+            string url = $"{POKE_API}/abilities/{i}";
+
+            HttpResponseMessage response = await _httpClient.GetAsync(url);
+
+            if (!response.IsSuccessStatusCode) 
+            {
+                throw new CustomHttpRequestException(url, response.StatusCode, response.Content);
+            }
+    
+            ApiAbility? data = await response.Content.ReadFromJsonAsync<ApiAbility>();
+
+            if (data == null)
+            {
+                throw new ArgumentNullException();
+            }
+            
+            Ability ability = data.ToAbility();
+
+            ability.Id = ObjectId.GenerateNewId();
+            await _abilityCollection.InsertOneAsync(ability);
+        }
 
         return;
     }
 
-    public Task PopulateItems(int id = 1)
+    public async Task PopulateItems(int qtd)
+    {
+        for (int i = 1; i < qtd; i++) {
+            string url = $"{POKE_API}/items/{i}";
+
+            HttpResponseMessage response = await _httpClient.GetAsync(url);
+
+            if (!response.IsSuccessStatusCode) 
+            {
+                throw new CustomHttpRequestException(url, response.StatusCode, response.Content);
+            }
+    
+            ApiItem? data = await response.Content.ReadFromJsonAsync<ApiItem>();
+
+            if (data == null)
+            {
+                throw new ArgumentNullException();
+            }
+            
+            Ability ability = data.ToAbility();
+
+            ability.Id = ObjectId.GenerateNewId();
+            await _abilityCollection.InsertOneAsync(ability);
+        }
+
+        return;
+    }
+
+    public Task PopulateMoves(int qtd)
     {
         return Task.CompletedTask;
     }
 
-    public Task PopulateMoves(int id = 1)
-    {
-        return Task.CompletedTask;
-    }
-
-    public Task PopulatePokemons(int id = 1)
+    public Task PopulatePokemons(int qtd)
     {
         return Task.CompletedTask;
     }

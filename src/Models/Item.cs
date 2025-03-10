@@ -4,12 +4,10 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace PokemonPc.Models;
 
-public class Item
+public class Item : Model
 {
-    [BsonId]
-    [BsonRepresentation(BsonType.ObjectId)]
-    [BsonElement("_id")]
-    public string? Id { get; set; }
+    [BsonElement("externalId")]
+    public int ExternalId { get; set; }
 
     [BsonElement("name")]
     public string Name { get; set; } = null!;

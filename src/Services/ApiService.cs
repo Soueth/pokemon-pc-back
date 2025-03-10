@@ -18,7 +18,7 @@ public class ApiService : IApiService
     private readonly string POKE_API;
 
     // Collections
-    private readonly IMongoCollection<Pokedex> _pokedexCollection;
+    private readonly IMongoCollection<Entry> _pokedexCollection;
     private readonly IMongoCollection<Move> _moveCollection;
     private readonly IMongoCollection<Ability> _abilityCollection;
     private readonly IMongoCollection<Item> _itemCollection;
@@ -33,7 +33,7 @@ public class ApiService : IApiService
         IConfiguration configuration
     )
     {
-        _pokedexCollection = db.GetCollection<Pokedex>(APP_CONSTANTS.PROVIDERS.POKEDEX);
+        _pokedexCollection = db.GetCollection<Entry>(APP_CONSTANTS.PROVIDERS.POKEDEX);
         _moveCollection = db.GetCollection<Move>(APP_CONSTANTS.PROVIDERS.MOVE);
         _abilityCollection = db.GetCollection<Ability>(APP_CONSTANTS.PROVIDERS.ABILITY);
         _itemCollection = db.GetCollection<Item>(APP_CONSTANTS.PROVIDERS.ITEM);
@@ -44,7 +44,7 @@ public class ApiService : IApiService
         VerifyOwnData();
     }
 
-    private async Task<Dictionary<string, int>> VerifyExternalData()
+    private async Task<Dictionary<string, int>> CountExternalData()
     {
         // Faz requisições da quantidade dos obj faltantes
         HttpResponseMessage taskAbilities = await _httpClient.GetAsync($"{POKE_API}/abilities");
@@ -100,7 +100,7 @@ public class ApiService : IApiService
 
     public async void VerifyOwnData()
     {
-        Dictionary<string, int> counts = await VerifyExternalData();
+        Dictionary<string, int> counts = await CountExternalData();
 
         // Verifica quais collections não estão populadas
         Task<Item> hasItem = _itemCollection.Find(FilterDefinition<Item>.Empty)
@@ -115,7 +115,7 @@ public class ApiService : IApiService
                                             .Limit(1)
                                             .FirstOrDefaultAsync();
 
-        Task<Pokedex> hasPokemon = _pokedexCollection.Find(FilterDefinition<Pokedex>.Empty)
+        Task<Entry> hasPokemon = _pokedexCollection.Find(FilterDefinition<Entry>.Empty)
                                                     .Limit(1)
                                                     .FirstOrDefaultAsync();
 
@@ -125,13 +125,13 @@ public class ApiService : IApiService
         // Popula as coleções
         List<Task> tasks = [];
 
-        if ((await hasItem) != null)
-        {
-            tasks.Add(PopulateItems(counts["items"]));
-        }
         if ((await hasAbility) != null)
         {
             tasks.Add(PopulateAbilities(counts["abilities"]));
+        }
+        if ((await hasItem) != null)
+        {
+            tasks.Add(PopulateItems(counts["items"]));
         }
         if ((await hasMove) != null)
         {
@@ -153,7 +153,7 @@ public class ApiService : IApiService
     public async Task PopulateAbilities(int qtd)
     {
         for (int i = 1; i < qtd; i++) {
-            string url = $"{POKE_API}/abilities/{i}";
+            string url = $"{POKE_API}/ability/{i}";
 
             HttpResponseMessage response = await _httpClient.GetAsync(url);
 
@@ -181,7 +181,7 @@ public class ApiService : IApiService
     public async Task PopulateItems(int qtd)
     {
         for (int i = 1; i < qtd; i++) {
-            string url = $"{POKE_API}/items/{i}";
+            string url = $"{POKE_API}/item/{i}";
 
             HttpResponseMessage response = await _httpClient.GetAsync(url);
 
@@ -197,18 +197,41 @@ public class ApiService : IApiService
                 throw new ArgumentNullException();
             }
             
-            Ability ability = data.ToAbility();
+            Item item = data.ToItem();
 
-            ability.Id = ObjectId.GenerateNewId();
-            await _abilityCollection.InsertOneAsync(ability);
+            item.Id = ObjectId.GenerateNewId();
+            await _itemCollection.InsertOneAsync(item);
         }
 
         return;
     }
 
-    public Task PopulateMoves(int qtd)
+    public async Task PopulateMoves(int qtd)
     {
-        return Task.CompletedTask;
+        for (int i = 1; i < qtd; i++) {
+            string url = $"{POKE_API}/move/{i}";
+
+            HttpResponseMessage response = await _httpClient.GetAsync(url);
+
+            if (!response.IsSuccessStatusCode) 
+            {
+                throw new CustomHttpRequestException(url, response.StatusCode, response.Content);
+            }
+    
+            ApiMove? data = await response.Content.ReadFromJsonAsync<ApiMove>();
+
+            if (data == null)
+            {
+                throw new ArgumentNullException();
+            }
+            
+            Move move = data.ToMove();
+
+            move.Id = ObjectId.GenerateNewId();
+            await _moveCollection.InsertOneAsync(move);
+        }
+
+        return;
     }
 
     public Task PopulatePokemons(int qtd)

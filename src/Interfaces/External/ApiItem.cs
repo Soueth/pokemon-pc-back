@@ -10,7 +10,7 @@ public interface ApiItem
     public NamedAPIResource Attributes { get; }
     public NamedAPIResource Category { get; }
     public VerboseEffect[] Effect_entries { get; }
-    public VersionGroupFlavorText[] Flavor_effect_entries { get; }
+    public VersionGroupFlavorText[] Flavor_text_entries { get; }
     public GenerationGameIndex[] Game_indices { get; }
     public Name[] Names { get; }
     public ItemSprites Sprites { get; }

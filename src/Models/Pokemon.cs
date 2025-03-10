@@ -40,7 +40,7 @@ public class Pokemon : Model
     [BsonElement("entry")]
     public ObjectId? EntryId { get; set; }
     [BsonIgnore]
-    public Pokedex? Entry { get; set; }
+    public Entry? Entry { get; set; }
 
 
     [BsonElement("level")]

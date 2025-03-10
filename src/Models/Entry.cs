@@ -1,6 +1,6 @@
 namespace PokemonPc.Models;
 
-public class Pokedex : Model
+public class Entry : Model
 {
     public int Number { get; set; }
 

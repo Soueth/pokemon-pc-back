@@ -8,14 +8,14 @@ using PokemonPc.Models;
 
 namespace PokemonPc.Repositories;
 
-public class PokedexRepository : Repository<Pokedex>, IPokedexRepository
+public class PokedexRepository : Repository<Entry>, IPokedexRepository
 {
     public PokedexRepository(IMongoDatabase db) 
         : base(db, APP_CONSTANTS.PROVIDERS.POKEDEX) {}
 
     public async Task<bool> IsCollectionEmpty()
     {
-        Pokedex? doc = await _collection.Find(FilterDefinition<Pokedex>.Empty)
+        Entry? doc = await _collection.Find(FilterDefinition<Entry>.Empty)
                                     .Limit(1)
                                     .FirstOrDefaultAsync();
 

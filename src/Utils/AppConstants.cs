@@ -11,6 +11,8 @@ public readonly struct PROVIDERS
     public string MOVE { get; }
     public string ABILITY { get; }
     public string POKEMON { get; }
+    public string MOVE_POKEMON { get; }
+    public string ABILITY_POKEMON { get; }
 
     public PROVIDERS()
     {
@@ -21,6 +23,8 @@ public readonly struct PROVIDERS
         MOVE = "moves";
         ABILITY = "abilities";
         POKEMON = "pokemon";
+        MOVE_POKEMON = "move-pokemon";
+        ABILITY_POKEMON = "ability-pokemon";
     }
 }
 

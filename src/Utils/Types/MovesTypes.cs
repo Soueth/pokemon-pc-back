@@ -2,10 +2,11 @@ using System;
 
 namespace PokemonPc.Utils.Types;
 
-public enum LearningType
+public enum LearningMethod
 {
     Level,
     TM,
+    Tutor,
     Other,
 }
 

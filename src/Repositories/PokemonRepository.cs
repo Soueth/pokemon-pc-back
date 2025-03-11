@@ -27,7 +27,7 @@ public class PokemonRepository : Repository<Pokemon>, IPokemonRepository
             doc.Id.ToString()!,
             doc.Nickname!,
             doc.Entry?.Name!,
-            doc.Entry?.Image!,
+            doc.Entry?.ImageUrl!,
             doc.Entry?.Types!,
             doc.Level
         )).ToArray() ?? Array.Empty<PokemonBoxDto>();

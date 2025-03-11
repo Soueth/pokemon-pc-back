@@ -18,10 +18,12 @@ public class ApiService : IApiService
     private readonly string POKE_API;
 
     // Collections
-    private readonly IMongoCollection<Entry> _entryCollection;
     private readonly IMongoCollection<Move> _moveCollection;
     private readonly IMongoCollection<Ability> _abilityCollection;
     private readonly IMongoCollection<Item> _itemCollection;
+    private readonly IMongoCollection<Entry> _entryCollection;
+    private readonly IMongoCollection<MovePokemon> _movePokemonCollection;
+    private readonly IMongoCollection<AbilityPokemon> _abilityPokemonCollection;
 
     // Contador de objetos possídos
     private Dictionary<string, int> _counts = [];
@@ -37,6 +39,8 @@ public class ApiService : IApiService
         _moveCollection = db.GetCollection<Move>(APP_CONSTANTS.PROVIDERS.MOVE);
         _abilityCollection = db.GetCollection<Ability>(APP_CONSTANTS.PROVIDERS.ABILITY);
         _itemCollection = db.GetCollection<Item>(APP_CONSTANTS.PROVIDERS.ITEM);
+        _movePokemonCollection = db.GetCollection<MovePokemon>(APP_CONSTANTS.PROVIDERS.MOVE_POKEMON);
+        _abilityPokemonCollection = db.GetCollection<AbilityPokemon>(APP_CONSTANTS.PROVIDERS.ABILITY_POKEMON);
 
         _httpClient = httpClient;
         POKE_API = configuration["PokeApi"]!;
@@ -125,22 +129,18 @@ public class ApiService : IApiService
         // Popula as coleções
         List<Task> tasks = [];
 
-        if ((await hasAbility) != null)
+        if ((await hasAbility) == null)
         {
             tasks.Add(PopulateAbilities(counts["abilities"]));
         }
-        if ((await hasItem) != null)
+        if ((await hasItem) == null)
         {
             tasks.Add(PopulateItems(counts["items"]));
         }
-        if ((await hasMove) != null)
+        if ((await hasMove) == null)
         {
             tasks.Add(PopulateMoves(counts["moves"]));
         }
-
-        Console.ForegroundColor = ConsoleColor.Magenta;
-        Console.WriteLine("Banco de dados populado");
-        Console.ResetColor();
 
         await Task.WhenAll(tasks);
 
@@ -148,6 +148,10 @@ public class ApiService : IApiService
         {
             await PopulatePokemons(counts["pokemon"]);
         }
+
+        Console.ForegroundColor = ConsoleColor.Magenta;
+        Console.WriteLine("Banco de dados populado");
+        Console.ResetColor();
     }
 
     public async Task PopulateAbilities(int qtd)
@@ -234,8 +238,52 @@ public class ApiService : IApiService
         return;
     }
 
-    public Task PopulatePokemons(int qtd)
+    public async Task PopulatePokemons(int qtd)
     {
-        return Task.CompletedTask;
+        for (int i = 1; i < qtd; i++) {
+            string url = $"{POKE_API}/pokemon/{i}";
+
+            HttpResponseMessage response = await _httpClient.GetAsync(url);
+
+            if (!response.IsSuccessStatusCode) 
+            {
+                throw new CustomHttpRequestException(url, response.StatusCode, response.Content);
+            }
+    
+            ApiPokemon? data = await response.Content.ReadFromJsonAsync<ApiPokemon>();
+
+            if (data == null)
+            {
+                throw new ArgumentNullException();
+            }
+            
+            Entry entry = data.ToEntry();
+
+            List<Task> tasks = [];
+
+            entry.Id = ObjectId.GenerateNewId();
+            tasks.Add(_entryCollection.InsertOneAsync(entry));
+
+            foreach (var move in data.Moves)
+            {
+                MovePokemon movePokemon = move.ToMovePokemon()
+
+                MovePokemon movePokemon = new()
+                {
+                    MoveId = move.Move.Id,
+                    Pokemon = entry.Id,
+                    Level = move.VersionGroupDetails[0].LevelLearnedAt,
+                };
+
+                tasks.Add(_movePokemonCollection.InsertOneAsync(movePokemon));
+            }
+        }
+
+        return;
+    }
+
+    private GetMovesFromDatabase()
+    {
+
     }
 }

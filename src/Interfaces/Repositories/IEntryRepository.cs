@@ -1,4 +1,3 @@
-using System;
 using PokemonPc.Models;
 
 namespace PokemonPc.Interfaces.Repositories;

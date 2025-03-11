@@ -1,14 +1,23 @@
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 using PokemonPc.Utils.Types;
 
 namespace PokemonPc.Models;
 
-public class MovesPokemon : Model
+public class MovePokemon : Model
 {
+    [BsonElement("move")]
+    public ObjectId MoveId { get; set; }
+
+    [BsonIgnore]
     public ICollection<Move> Move { get; set; } = null!;
 
+    [BsonElement("pokemon")]
+    public ObjectId PokemonId { get; set; }
+
+    [BsonIgnore]
     public ICollection<Entry> Pokemon { get; set; } = null!;
 
-    public string LearningForm { get; set; } = null!;
-
-    public LearningType LearningType { get; set; }
+    public LearningMethod[] LearningMethod { get; set; } = null!;
+    public int? LearningLevel { get; set; }
 }

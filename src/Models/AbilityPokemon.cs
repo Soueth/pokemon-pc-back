@@ -1,5 +1,3 @@
-using System;
-
 namespace PokemonPc.Models;
 
 public class AbilityPokemon : Model

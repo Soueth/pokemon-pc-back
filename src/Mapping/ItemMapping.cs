@@ -9,13 +9,12 @@ public static class ItemMapping
     public static Item ToItem(this ApiItem apiItem)
     {
         VersionGroupFlavorText? flavorText = apiItem.Flavor_text_entries.FirstOrDefault(e => e?.Language.Name == "en" && e.Version_group.Name == "scarlet-violet", null);
-        VerboseEffect? effectEntry = apiItem.Effect_entries.FirstOrDefault(e => e?.Language.Name == "en", null);
-
         if (flavorText == null)
         {
             throw new AtributoInexistenteException(nameof(flavorText), nameof(apiItem));
         }
 
+        VerboseEffect? effectEntry = apiItem.Effect_entries.FirstOrDefault(e => e?.Language.Name == "en", null);
         if (effectEntry == null)
         {
             throw new AtributoInexistenteException(nameof(effectEntry), nameof(apiItem));

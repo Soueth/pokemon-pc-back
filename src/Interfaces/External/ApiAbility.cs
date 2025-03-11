@@ -20,7 +20,7 @@ public interface AbilityFlavorText
 
 }
 
-public interface AbilityPokemon
+public interface ApiAbilityPokemon
 {
     public bool Is_hidden { get; }
     public int Slot { get; }
@@ -37,5 +37,5 @@ public interface ApiAbility
     public VerboseEffect[] Effect_entries { get; }
     public AbilityEffectChange[] Effect_changes { get; }
     public AbilityFlavorText[] Flavor_text_entries { get; }
-    public AbilityPokemon[] Pokemon { get; }
+    public ApiAbilityPokemon[] Pokemon { get; }
 }

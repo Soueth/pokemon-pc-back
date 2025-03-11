@@ -17,7 +17,7 @@ public class PokemonRepository : Repository<Pokemon>, IPokemonRepository
     {
         var pipeline = _collection.Aggregate()
             .Match(doc => doc.Box == box)
-            .Lookup(APP_CONSTANTS.PROVIDERS.POKEDEX, "entry", "_id", "entry")
+            .Lookup(APP_CONSTANTS.PROVIDERS.ENTRY, "entry", "_id", "entry")
             .Sort("{ box: 1 }")
             .As<Pokemon>();
 

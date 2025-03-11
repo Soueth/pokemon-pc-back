@@ -18,7 +18,7 @@ public class ApiService : IApiService
     private readonly string POKE_API;
 
     // Collections
-    private readonly IMongoCollection<Entry> _pokedexCollection;
+    private readonly IMongoCollection<Entry> _entryCollection;
     private readonly IMongoCollection<Move> _moveCollection;
     private readonly IMongoCollection<Ability> _abilityCollection;
     private readonly IMongoCollection<Item> _itemCollection;
@@ -33,7 +33,7 @@ public class ApiService : IApiService
         IConfiguration configuration
     )
     {
-        _pokedexCollection = db.GetCollection<Entry>(APP_CONSTANTS.PROVIDERS.POKEDEX);
+        _entryCollection = db.GetCollection<Entry>(APP_CONSTANTS.PROVIDERS.ENTRY);
         _moveCollection = db.GetCollection<Move>(APP_CONSTANTS.PROVIDERS.MOVE);
         _abilityCollection = db.GetCollection<Ability>(APP_CONSTANTS.PROVIDERS.ABILITY);
         _itemCollection = db.GetCollection<Item>(APP_CONSTANTS.PROVIDERS.ITEM);
@@ -115,7 +115,7 @@ public class ApiService : IApiService
                                             .Limit(1)
                                             .FirstOrDefaultAsync();
 
-        Task<Entry> hasPokemon = _pokedexCollection.Find(FilterDefinition<Entry>.Empty)
+        Task<Entry> hasPokemon = _entryCollection.Find(FilterDefinition<Entry>.Empty)
                                                     .Limit(1)
                                                     .FirstOrDefaultAsync();
 

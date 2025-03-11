@@ -58,8 +58,8 @@ namespace PokemonPc.Configurations
         public static void AddAplicationServices(this IServiceCollection services)
         {
             // Injeções Singleton
-            services.AddSingleton<IPokedexRepository, PokedexRepository>();
-            services.AddSingleton<IPokedexService, PokedexService>();
+            services.AddSingleton<IEntryRepository, EntryRepository>();
+            services.AddSingleton<IEntryService, EntryService>();
             
             services.AddSingleton<IAuthService, AuthService>();
             services.AddSingleton<IApiService, ApiService>();

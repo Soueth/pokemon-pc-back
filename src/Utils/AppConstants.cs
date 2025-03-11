@@ -6,7 +6,7 @@ public readonly struct PROVIDERS
 {
     public string USER { get; }
     public string TRAINER { get; }
-    public string POKEDEX { get; }
+    public string ENTRY { get; }
     public string ITEM { get; }
     public string MOVE { get; }
     public string ABILITY { get; }
@@ -16,7 +16,7 @@ public readonly struct PROVIDERS
     {
         USER = "users";
         TRAINER = "trainers";
-        POKEDEX = "pokedex";
+        ENTRY = "Entry";
         ITEM = "items";
         MOVE = "moves";
         ABILITY = "abilities";

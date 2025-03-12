@@ -73,6 +73,16 @@ namespace PokemonPc.Configurations
 
             services.AddScoped<IPokemonRepository, PokemonRepository>();
             services.AddScoped<IPokemonService, PokemonService>();
+
+            services.AddScoped<IAbilityRepository, AbilityRepository>();
+
+            services.AddScoped<IAbilityPokemonRepository, AbilityPokemonRepository>();
+
+            services.AddScoped<IMoveRepository, MoveRepository>();
+
+            services.AddScoped<IMovePokemonRepository, MovePokemonRepository>();
+
+            services.AddScoped<IItemRepository, ItemRepository>();
         }
     }
 }

@@ -3,6 +3,7 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using PokemonPc.Constants;
 using PokemonPc.Interfaces.External;
+using PokemonPc.Interfaces.Repositories;
 using PokemonPc.Interfaces.Services;
 using PokemonPc.Mapping;
 using PokemonPc.Models;
@@ -18,12 +19,18 @@ public class ApiService : IApiService
     private readonly string POKE_API;
 
     // Collections
-    private readonly IMongoCollection<Move> _moveCollection;
-    private readonly IMongoCollection<Ability> _abilityCollection;
-    private readonly IMongoCollection<Item> _itemCollection;
-    private readonly IMongoCollection<Entry> _entryCollection;
-    private readonly IMongoCollection<MovePokemon> _movePokemonCollection;
-    private readonly IMongoCollection<AbilityPokemon> _abilityPokemonCollection;
+    // private readonly IMongoCollection<Move> _moveCollection;
+    private readonly IMoveRepository _moveRepository;
+    // private readonly IMongoCollection<Ability> _abilityCollection;
+    private readonly IAbilityRepository _abilityRepository;
+    // private readonly IMongoCollection<Item> _itemCollection;
+    private readonly IItemRepository _itemRepository;
+    // private readonly IMongoCollection<Entry> _entryCollection;
+    private readonly IEntryRepository _entryRepository;
+    // private readonly IMongoCollection<MovePokemon> _movePokemonCollection;
+    private readonly IMovePokemonRepository _movePokemonRepository;
+    // private readonly IMongoCollection<AbilityPokemon> _abilityPokemonCollection;
+    private readonly IAbilityPokemonRepository _abilityPokemonRepository;
 
     // Contador de objetos possídos
     private Dictionary<string, int> _counts = [];
@@ -32,15 +39,27 @@ public class ApiService : IApiService
     (
         IMongoDatabase db,
         HttpClient httpClient,
-        IConfiguration configuration
+        IConfiguration configuration,
+        IMoveRepository moveRepository,
+        IAbilityRepository abilityRepository,
+        IItemRepository itemRepository,
+        IEntryRepository entryRepository,
+        IMovePokemonRepository movePokemonRepository,
+        IAbilityPokemonRepository abilityPokemonRepository
     )
     {
-        _entryCollection = db.GetCollection<Entry>(APP_CONSTANTS.PROVIDERS.ENTRY);
-        _moveCollection = db.GetCollection<Move>(APP_CONSTANTS.PROVIDERS.MOVE);
-        _abilityCollection = db.GetCollection<Ability>(APP_CONSTANTS.PROVIDERS.ABILITY);
-        _itemCollection = db.GetCollection<Item>(APP_CONSTANTS.PROVIDERS.ITEM);
-        _movePokemonCollection = db.GetCollection<MovePokemon>(APP_CONSTANTS.PROVIDERS.MOVE_POKEMON);
-        _abilityPokemonCollection = db.GetCollection<AbilityPokemon>(APP_CONSTANTS.PROVIDERS.ABILITY_POKEMON);
+        // _moveCollection = db.GetCollection<Move>(APP_CONSTANTS.PROVIDERS.MOVE);
+        _moveRepository = moveRepository;
+        // _abilityCollection = db.GetCollection<Ability>(APP_CONSTANTS.PROVIDERS.ABILITY);
+        _abilityRepository = abilityRepository;
+        // _itemCollection = db.GetCollection<Item>(APP_CONSTANTS.PROVIDERS.ITEM);
+        _itemRepository = itemRepository;
+        // _entryCollection = db.GetCollection<Entry>(APP_CONSTANTS.PROVIDERS.ENTRY);
+        _entryRepository = entryRepository;
+        // _movePokemonCollection = db.GetCollection<MovePokemon>(APP_CONSTANTS.PROVIDERS.MOVE_POKEMON);
+        _movePokemonRepository = movePokemonRepository;
+        // _abilityPokemonCollection = db.GetCollection<AbilityPokemon>(APP_CONSTANTS.PROVIDERS.ABILITY_POKEMON);
+        _abilityPokemonRepository = abilityPokemonRepository;
 
         _httpClient = httpClient;
         POKE_API = configuration["PokeApi"]!;
@@ -107,21 +126,10 @@ public class ApiService : IApiService
         Dictionary<string, int> counts = await CountExternalData();
 
         // Verifica quais collections não estão populadas
-        Task<Item> hasItem = _itemCollection.Find(FilterDefinition<Item>.Empty)
-                                                .Limit(1)
-                                                .FirstOrDefaultAsync();
-
-        Task<Ability> hasAbility = _abilityCollection.Find(FilterDefinition<Ability>.Empty)
-                                                    .Limit(1)
-                                                    .FirstOrDefaultAsync();
-
-        Task<Move> hasMove = _moveCollection.Find(FilterDefinition<Move>.Empty)
-                                            .Limit(1)
-                                            .FirstOrDefaultAsync();
-
-        Task<Entry> hasPokemon = _entryCollection.Find(FilterDefinition<Entry>.Empty)
-                                                    .Limit(1)
-                                                    .FirstOrDefaultAsync();
+        Task<bool> hasItem = _itemRepository.HasRegister();
+        Task<bool> hasAbility = _abilityRepository.HasRegister();
+        Task<bool> hasMove = _moveRepository.HasRegister();
+        Task<bool> hasPokemon = _entryRepository.HasRegister();
 
         // Aguarda todas as verificações terminarem e popula as coleções
         await Task.WhenAll(hasItem, hasAbility, hasMove, hasPokemon);
@@ -129,22 +137,22 @@ public class ApiService : IApiService
         // Popula as coleções
         List<Task> tasks = [];
 
-        if ((await hasAbility) == null)
+        if (await hasAbility)
         {
             tasks.Add(PopulateAbilities(counts["abilities"]));
         }
-        if ((await hasItem) == null)
+        if (await hasItem)
         {
             tasks.Add(PopulateItems(counts["items"]));
         }
-        if ((await hasMove) == null)
+        if (await hasMove)
         {
             tasks.Add(PopulateMoves(counts["moves"]));
         }
 
         await Task.WhenAll(tasks);
 
-        if ((await hasPokemon) != null)
+        if (await hasPokemon)
         {
             await PopulatePokemons(counts["pokemon"]);
         }
@@ -156,6 +164,7 @@ public class ApiService : IApiService
 
     public async Task PopulateAbilities(int qtd)
     {
+        Queue<Ability> abilities = [];
         for (int i = 1; i < qtd; i++) {
             string url = $"{POKE_API}/ability/{i}";
 
@@ -176,7 +185,14 @@ public class ApiService : IApiService
             Ability ability = data.ToAbility();
 
             ability.Id = ObjectId.GenerateNewId();
-            await _abilityCollection.InsertOneAsync(ability);
+
+            abilities.Append(ability);
+
+            if (i % 5 == 0 || i == (qtd - 1))
+            {
+                await _abilityRepository.CreateManyAsync(abilities, false);
+                abilities.Clear();
+            }
         }
 
         return;
@@ -184,6 +200,7 @@ public class ApiService : IApiService
 
     public async Task PopulateItems(int qtd)
     {
+        Queue<Item> items = [];
         for (int i = 1; i < qtd; i++) {
             string url = $"{POKE_API}/item/{i}";
 
@@ -204,7 +221,13 @@ public class ApiService : IApiService
             Item item = data.ToItem();
 
             item.Id = ObjectId.GenerateNewId();
-            await _itemCollection.InsertOneAsync(item);
+
+            items.Append(item);
+
+            if (i % 5 == 0 || i == (qtd - 1))
+            {
+                await _itemCollection.InsertOneAsync(item);
+            }
         }
 
         return;

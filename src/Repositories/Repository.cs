@@ -26,11 +26,31 @@ public abstract class Repository<T> : IRepository<T> where T : Model
             Filter.Eq("_id", id.ToObjectId)
         ).FirstOrDefaultAsync();
     }
+
+    // public async Task<T?> HasRegister()
+    // {
+    //     return await _collection.Find(Filter.Empty).FirstOrDefaultAsync();
+    // }
+    
     public async Task<T> CreateAsync(T entity)
     {
         entity.Id = ObjectId.GenerateNewId();
         await _collection.InsertOneAsync(entity);
         return entity;
+    }
+
+    public async Task<T[]> CreateManyAsync(IEnumerable<T> entities, bool generateId = true)
+    {
+        if (generateId)
+        {
+            foreach (var entity in entities)
+            {
+                entity.Id = ObjectId.GenerateNewId();
+            }
+        }
+
+        await _collection.InsertManyAsync(entities);
+        return entities.ToArray();
     }
 
     public async Task<bool> UpdateByIdAsync(MongoId id, T entity)

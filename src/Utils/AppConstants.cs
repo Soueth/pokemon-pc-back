@@ -18,7 +18,7 @@ public readonly struct PROVIDERS
     {
         USER = "users";
         TRAINER = "trainers";
-        ENTRY = "Entry";
+        ENTRY = "entries";
         ITEM = "items";
         MOVE = "moves";
         ABILITY = "abilities";

@@ -2,8 +2,7 @@ using PokemonPc.Models;
 
 namespace PokemonPc.Interfaces.Repositories;
 
-public interface IEntryRepository : IRepository<Entry>
+public interface IAbilityRepository : IRepository<Ability>
 {
-    // Task<bool> IsCollectionEmpty();
     Task<bool> HasRegister();
 }
